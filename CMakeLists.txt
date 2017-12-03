@@ -80,10 +80,14 @@ install(
   DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/${CMAKE_PROJECT_NAME}
 )
 
-# aggregate mbusd@.service from its template
-if(IS_DIRECTORY /usr/lib/systemd/system)
+find_package(PkgConfig)
+pkg_check_modules(SystemD "systemd")
+if(SystemD_FOUND)
+    message("found SystemD")
+
+    # aggregate mbusd@.service from its template
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/systemd-units/mbusd@.service.in mbusd@.service)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mbusd@.service DESTINATION /usr/lib/systemd/system)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mbusd@.service DESTINATION /lib/systemd/system)
 endif()
 
 # uninstall target
